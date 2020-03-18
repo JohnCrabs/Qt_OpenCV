@@ -66,3 +66,7 @@ class Image:
             cv2.imwrite(self.src, self.img)
             return True
         return False
+
+    def img_RGB(self):
+        img_tmp = cv2.cvtColor(self.img, cv2.COLOR_BGR2RGB)
+        return img_tmp
