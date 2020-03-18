@@ -6,7 +6,9 @@ from PyQt5.Qt import (Qt, QDir, QLabel, QImage, QFileDialog)
 
 class Window:
     def __init__(self):
+        # ------------------------
         # Set flags
+        # ------------------------
         self.UP = True
         self.DOWN = False
 
@@ -31,18 +33,29 @@ class Window:
 
         self.DIALOG_FLAG = QFileDialog.DontUseNativeDialog
 
+        # Flags Section ends here
+        # ---------------------------------------------------------------------------------------------------------- #
+        # ------------------------
         # Set class items
+        # ------------------------
         self.q_img = QImage()
 
         self.img = Image()
         self.is_img_Open = False
 
+        # Class items ends here
+        # ---------------------------------------------------------------------------------------------------------- #
+        # ------------------------
         # Set up the ui
+        # ------------------------
         self.app = QtWidgets.QApplication(sys.argv)
         self.ui = Ui_MainWindow()
         self.MainWindow = QtWidgets.QMainWindow()
         self.ui.setupUi(self.MainWindow)
 
+        # Setting up ends here
+        # ---------------------------------------------------------------------------------------------------------- #
+        # ------------------------
         # Actions list starts here
         # ------------------------
         self.ui.actionOpen.triggered.connect(self.open)
@@ -50,9 +63,14 @@ class Window:
         self.ui.actionExit.triggered.connect(self.exit_window)
 
         # Actions list ends here
+        # ---------------------------------------------------------------------------------------------------------- #
+        # ------------------------
+        # Main loop and exit app
         # ------------------------
         self.MainWindow.show()
         sys.exit(self.app.exec_())
+        # END OF APPLICATION
+        # ---------------------------------------------------------------------------------------------------------- #
 
     def open_img_path(self):
         file_dialog = QFileDialog()
