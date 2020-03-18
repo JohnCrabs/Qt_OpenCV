@@ -16,6 +16,15 @@ class Image:
         self.img = None
         self.is_Open = False
 
+    def print_img_info(self):
+        print("Full_Path =", self.src)
+        print("Folder =", self.folder)
+        print("Name =", self.name)
+        print("Suffix =", self.suffix)
+        print("Width =", self.width)
+        print("Height =", self.height)
+        print("Color_Bands =", self.bands)
+
     def open_image_from(self, src, img_id=0, mem_alloc=True):
         if os.path.isfile(src):  # Check if file path exists
             # Set paths
