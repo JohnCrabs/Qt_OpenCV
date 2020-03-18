@@ -33,4 +33,4 @@ class Window:
         print("save")
 
     def exit_window(self):
-        sys.exit(self.app.exec_())
+        self.MainWindow.close()  # Close The window
