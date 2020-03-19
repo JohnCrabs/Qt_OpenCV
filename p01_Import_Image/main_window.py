@@ -45,6 +45,7 @@ class Window:
 
         self.img = Image()
         self.is_img_Open = False
+        self.is_img_Save = False
 
         # ------------------------
         # Class items ends here
@@ -111,6 +112,22 @@ class Window:
             return True, f_path
         return False, ""
 
+    def save_img_path(self):
+        """
+        Open the dialog and take the path.
+        :return: True/False, path_string/empty_string
+        """
+        file_dialog = QFileDialog()
+        f_path = file_dialog.getSaveFileName(parent=None,
+                                             caption="Save Image as",
+                                             directory=QDir.homePath(),
+                                             filter=self.IMG_FILTER,
+                                             initialFilter="",
+                                             options=self.DIALOG_FLAG)[0]
+        if f_path:
+            return True, f_path
+        return False, ""
+
     def open(self):
         """
         Open an image and create a QImage() item for view.
@@ -127,7 +144,13 @@ class Window:
             self.ui.actionSave.setEnabled(self.UP)  # Enable save (currently not so useful)
 
     def save(self):
-        print("save")
+        """
+        Save an image to a given path
+        :return: Nothing
+        """
+        self.is_img_Save, f_path = self.save_img_path()  # Open dialog and take the path
+        if self.is_img_Save:  # Check if user gave a path or not (aka pressed "Open" or "Cancel"
+            self.img.save_image_as(f_path)
 
     def exit_window(self):
         """

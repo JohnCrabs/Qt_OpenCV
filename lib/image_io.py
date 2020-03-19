@@ -46,7 +46,22 @@ class Image:
             if mem_alloc:
                 self.img = img_tmp
             self.is_Open = mem_alloc
+            return True
+        return False
 
+    def set_export_path(self, src):
+        self.export = src
+        suffix = os.path.basename(self.export)
+        suffix = os.path.splitext(suffix)[1]
+        if suffix == "":
+            self.export += ".jpg"
+
+    def save_image_as(self, src):
+        if self.is_Open:
+            print("Save")
+            if self.export is not src:
+                self.set_export_path(src)
+            cv2.imwrite(self.export, self.img)
             return True
         return False
 
