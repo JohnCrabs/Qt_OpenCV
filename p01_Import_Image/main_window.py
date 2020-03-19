@@ -2,7 +2,7 @@ import sys
 from lib.image_io import *
 from p01_Import_Image.ui_main import *
 
-from PyQt5.Qt import (Qt, QDir, QTimer, QImage, QPixmap, QFileDialog)
+from PyQt5.Qt import (Qt, QDir, QSize, QTimer, QImage, QPixmap, QFileDialog)
 
 
 class Window:
@@ -82,9 +82,16 @@ class Window:
 
     def update_img_view(self):
         if self.is_img_Open:
+            #print(self.ui.img_view.size())
+            width = self.ui.img_view.width()
+            height = self.ui.img_view.height()
+            if self.img.width < width or self.img.height < height:
+                width = self.q_img.width()
+                height = self.q_img.height()
+            size = QSize(width, height)
             pixmap = QPixmap()
             pixmap = pixmap.fromImage(self.q_img)
-            pixmap = pixmap.scaled(self.ui.img_view.size(), self.Q_ASPECT_RATIO)
+            pixmap = pixmap.scaled(size, self.Q_ASPECT_RATIO)
             self.ui.img_view.setPixmap(pixmap)
             self.ui.img_view.show()
 
