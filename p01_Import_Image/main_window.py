@@ -2,7 +2,8 @@ import sys
 from lib.image_io import *
 from p01_Import_Image.ui_main import *
 
-from PyQt5.Qt import (Qt, QDir, QLabel, QImage, QFileDialog)
+from PyQt5.Qt import (Qt, QDir, QTimer, QImage, QPixmap, QFileDialog)
+
 
 class Window:
     def __init__(self):
@@ -32,7 +33,7 @@ class Window:
                           self.SR__FORMAT + self.DD + self.RAS_FORMAT
 
         self.DIALOG_FLAG = QFileDialog.DontUseNativeDialog
-
+        self.Q_ASPECT_RATIO = Qt.KeepAspectRatio
         # ------------------------
         # Flags Section ends here
         # ---------------------------------------------------------------------------------------------------------- #
@@ -40,6 +41,7 @@ class Window:
         # Set class items
         # ------------------------
         self.q_img = QImage()
+        self.img_view_timer = QTimer()
 
         self.img = Image()
         self.is_img_Open = False
@@ -63,6 +65,9 @@ class Window:
         self.ui.actionOpen.triggered.connect(self.open)
         self.ui.actionSave.triggered.connect(self.save)
         self.ui.actionExit.triggered.connect(self.exit_window)
+
+        self.img_view_timer.timeout.connect(self.update_img_view)
+        self.img_view_timer.start(250)
         # ------------------------
         # Actions list ends here
         # ---------------------------------------------------------------------------------------------------------- #
@@ -74,6 +79,14 @@ class Window:
         # ------------------------
         # END OF APPLICATION
         # ---------------------------------------------------------------------------------------------------------- #
+
+    def update_img_view(self):
+        if self.is_img_Open:
+            pixmap = QPixmap()
+            pixmap = pixmap.fromImage(self.q_img)
+            pixmap = pixmap.scaled(self.ui.img_view.size(), self.Q_ASPECT_RATIO)
+            self.ui.img_view.setPixmap(pixmap)
+            self.ui.img_view.show()
 
     def open_img_path(self):
         """
