@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>656</width>
+    <height>592</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>656</width>
+    <height>592</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>Test Window </string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <property name="minimumSize">
+    <size>
+     <width>548</width>
+     <height>548</height>
+    </size>
+   </property>
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="0">
+     <widget class="QWidget" name="view_widget" native="true">
+      <property name="minimumSize">
+       <size>
+        <width>530</width>
+        <height>530</height>
+       </size>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <item>
+        <widget class="QLabel" name="img_view">
+         <property name="minimumSize">
+          <size>
+           <width>512</width>
+           <height>512</height>
+          </size>
+         </property>
+         <property name="frameShape">
+          <enum>QFrame::Panel</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Sunken</enum>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item row="0" column="1">
+     <widget class="QWidget" name="edit_widget" native="true">
+      <property name="minimumSize">
+       <size>
+        <width>102</width>
+        <height>530</height>
+       </size>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <item>
+        <widget class="QLabel" name="light_label">
+         <property name="autoFillBackground">
+          <bool>false</bool>
+         </property>
+         <property name="text">
+          <string>Light:</string>
+         </property>
+         <property name="textFormat">
+          <enum>Qt::AutoText</enum>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QSpinBox" name="light_spinbox">
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+         <property name="minimum">
+          <number>-255</number>
+         </property>
+         <property name="maximum">
+          <number>255</number>
+         </property>
+         <property name="singleStep">
+          <number>5</number>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="contrast_label">
+         <property name="text">
+          <string>Contrast:</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QDoubleSpinBox" name="contrast_spinbox">
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+         <property name="decimals">
+          <number>2</number>
+         </property>
+         <property name="minimum">
+          <double>-10.000000000000000</double>
+         </property>
+         <property name="maximum">
+          <double>10.000000000000000</double>
+         </property>
+         <property name="singleStep">
+          <double>0.100000000000000</double>
+         </property>
+         <property name="value">
+          <double>1.000000000000000</double>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="edit_widget_spacer">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>656</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <addaction name="actionOpen"/>
+    <addaction name="actionSave"/>
+    <addaction name="actionSave_as"/>
+    <addaction name="actionExit"/>
+   </widget>
+   <widget class="QMenu" name="menuEdit">
+    <property name="title">
+     <string>Edit</string>
+    </property>
+    <widget class="QMenu" name="menuFilters">
+     <property name="title">
+      <string>Filters</string>
+     </property>
+     <addaction name="actionCustom"/>
+     <addaction name="separator"/>
+     <addaction name="actionLaplace"/>
+     <addaction name="actionGaussian"/>
+     <addaction name="actionSobel"/>
+    </widget>
+    <widget class="QMenu" name="menuTransformations">
+     <property name="title">
+      <string>Transformations</string>
+     </property>
+     <widget class="QMenu" name="menuRotate">
+      <property name="title">
+       <string>Rotate</string>
+      </property>
+      <addaction name="action90_degree"/>
+      <addaction name="action180_degree"/>
+      <addaction name="action270_degree"/>
+      <addaction name="separator"/>
+      <addaction name="actionSet_degree"/>
+     </widget>
+     <widget class="QMenu" name="menuColor">
+      <property name="title">
+       <string>Color</string>
+      </property>
+      <addaction name="actionLight_Contrast"/>
+     </widget>
+     <addaction name="menuRotate"/>
+     <addaction name="menuColor"/>
+    </widget>
+    <addaction name="menuFilters"/>
+    <addaction name="menuTransformations"/>
+   </widget>
+   <addaction name="menuFile"/>
+   <addaction name="menuEdit"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionOpen">
+   <property name="text">
+    <string>Open</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
+   </property>
+  </action>
+  <action name="actionSave">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Save</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
+  </action>
+  <action name="actionExit">
+   <property name="text">
+    <string>Exit</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Q</string>
+   </property>
+  </action>
+  <action name="actionSave_as">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Save as</string>
+   </property>
+  </action>
+  <action name="actionCustom">
+   <property name="text">
+    <string>Custom</string>
+   </property>
+  </action>
+  <action name="actionLaplace">
+   <property name="text">
+    <string>Laplace</string>
+   </property>
+  </action>
+  <action name="actionGaussian">
+   <property name="text">
+    <string>Gaussian</string>
+   </property>
+  </action>
+  <action name="actionSobel">
+   <property name="text">
+    <string>Sobel</string>
+   </property>
+  </action>
+  <action name="action90_degree">
+   <property name="text">
+    <string>90 degree</string>
+   </property>
+  </action>
+  <action name="action180_degree">
+   <property name="text">
+    <string>180 degree</string>
+   </property>
+  </action>
+  <action name="action270_degree">
+   <property name="text">
+    <string>270 degree</string>
+   </property>
+  </action>
+  <action name="actionSet_degree">
+   <property name="text">
+    <string>Set degree</string>
+   </property>
+  </action>
+  <action name="actionLight_Contrast">
+   <property name="text">
+    <string>Light/Contrast</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
