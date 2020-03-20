@@ -1,5 +1,7 @@
 import sys
 from lib.image_io import *
+from helping_dialogs.color_processing import *
+
 from p02_Simple_Image_Processing.ui_main import *
 
 from PyQt5.Qt import (Qt, QDir, QSize, QTimer, QImage, QPixmap, QFileDialog)
@@ -57,6 +59,10 @@ class Window:
         self.ui = Ui_MainWindow()
         self.MainWindow = QtWidgets.QMainWindow()
         self.ui.setupUi(self.MainWindow)
+
+        self.DialogColor = QtWidgets.QDialog()
+        self.ui_color = Ui_DialogColoring()
+        self.ui_color.setupUi(self.DialogColor)
         # ------------------------
         # Setting up ends here
         # ---------------------------------------------------------------------------------------------------------- #
@@ -67,6 +73,8 @@ class Window:
         self.ui.actionSave.triggered.connect(self.save)
         self.ui.actionSave_as.triggered.connect(self.save_as)
         self.ui.actionExit.triggered.connect(self.exit_window)
+
+        self.ui.actionLight_Contrast.triggered.connect(self.open_color_light_dialog)
 
         self.img_view_timer.timeout.connect(self.update_img_view)
         self.img_view_timer.start(250)
@@ -87,7 +95,7 @@ class Window:
         self.ui.actionSave.setEnabled(self.UP)
         self.ui.actionSave_as.setEnabled(self.UP)
         self.ui.menuFilters.setEnabled(self.UP)
-        self.ui.menuColor.setEnabled(self.UP)
+        self.ui.menuTransformations.setEnabled(self.UP)
 
         # Enable Spinbox
         self.ui.light_spinbox.setEnabled(self.UP)
@@ -180,3 +188,6 @@ class Window:
         :return: Nothing
         """
         self.MainWindow.close()  # Close The window
+
+    def open_color_light_dialog(self):
+        self.DialogColor.show()
