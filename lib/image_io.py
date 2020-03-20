@@ -58,9 +58,16 @@ class Image:
 
     def save_image_as(self, src):
         if self.is_Open:
-            print("Save")
+            print("Save as")
             if self.export is not src:
                 self.set_export_path(src)
+            cv2.imwrite(self.export, self.img)
+            return True
+        return False
+
+    def save_image(self):
+        if self.is_Open:
+            print("Save")
             cv2.imwrite(self.export, self.img)
             return True
         return False
@@ -74,13 +81,6 @@ class Image:
         if self.is_Open:
             self.img = None
             self.is_Open = False
-
-    def save_image(self, o_src):
-        if self.is_Open:
-            self.export = o_src
-            cv2.imwrite(self.src, self.img)
-            return True
-        return False
 
     def img_RGB(self):
         img_tmp = cv2.cvtColor(self.img, cv2.COLOR_BGR2RGB)

@@ -65,6 +65,7 @@ class Window:
         # ------------------------
         self.ui.actionOpen.triggered.connect(self.open)
         self.ui.actionSave.triggered.connect(self.save)
+        self.ui.actionSave_as.triggered.connect(self.save_as)
         self.ui.actionExit.triggered.connect(self.exit_window)
 
         self.img_view_timer.timeout.connect(self.update_img_view)
@@ -80,6 +81,17 @@ class Window:
         # ------------------------
         # END OF APPLICATION
         # ---------------------------------------------------------------------------------------------------------- #
+
+    def enable_options(self):
+        # Enable Menu/Actions
+        self.ui.actionSave.setEnabled(self.UP)
+        self.ui.actionSave_as.setEnabled(self.UP)
+        self.ui.menuFilters.setEnabled(self.UP)
+        self.ui.menuColor.setEnabled(self.UP)
+
+        # Enable Spinbox
+        self.ui.light_spinbox.setEnabled(self.UP)
+        self.ui.contrast_spinbox.setEnabled(self.UP)
 
     def update_img_view(self):
         if self.is_img_Open:
@@ -141,11 +153,21 @@ class Window:
             bytes_per_line = 3 * self.img.width
             self.q_img = QImage(self.img.img_RGB(), self.img.width, self.img.height,
                                 bytes_per_line, QImage.Format_RGB888)
-            self.ui.actionSave.setEnabled(self.UP)  # Enable save (currently not so useful)
+            self.enable_options()  # Enable all image processing utilities
 
     def save(self):
         """
-        Save an image to a given path
+        Save an image to a given path. (If image has already been saved to a path reuses this path)
+        :return: Nothing
+        """
+        if not self.is_img_Save:
+            self.save_as()  # Open dialog and take the path
+        else:  # Check if user gave a path or not (aka pressed "Open" or "Cancel"
+            self.img.save_image()
+
+    def save_as(self):
+        """
+        Save an image to a given path. (Asks every time the user to specify a path)
         :return: Nothing
         """
         self.is_img_Save, f_path = self.save_img_path()  # Open dialog and take the path
