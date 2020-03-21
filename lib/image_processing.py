@@ -38,5 +38,7 @@ class ImageProcessing:
         return img_tmp
 
     def compute_light_contrast_per_channel(self, img):
-        img_tmp = np.multiply(self.contrast, img) + self.light
+        print(img[0])
+        print("")
+        print(img[0][0])
         return img_tmp

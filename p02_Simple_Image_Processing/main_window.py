@@ -87,6 +87,7 @@ class Window:
         self.img_view_timer.start(250)
 
         self.ui_color.cancel_button.clicked.connect(self.dialog_color_cancel)
+        self.ui_color.compute_button.clicked.connect(self.dialog_color_compute)
 
         # ------------------------
         # Actions list ends here
@@ -225,3 +226,32 @@ class Window:
 
     def dialog_color_cancel(self):
         self.DialogColor.close()
+
+    def dialog_color_compute(self):
+        if self.ui_color.l_radio_all_bands.isChecked():
+            print("l all bands")
+            self.img_proc.set_light(self.ui_color.l_spin_light_for_all.value())
+            self.ui.light_spinbox.setValue(self.ui_color.l_spin_light_for_all.value())
+            img_rgb = self.img.img_RGB()
+            img_rgb = self.img_proc.compute_light_contrast(img_rgb)
+            self.img.set_img_tmp(self.img.img_RGB2BGR(img_rgb))
+            bytes_per_line = 3 * self.img.width
+            self.q_img = QImage(self.img.img_tmp_RGB(), self.img.width, self.img.height,
+                                bytes_per_line, QImage.Format_RGB888)
+        else:
+            print("l rgb")
+            self.img_proc.compute_light_contrast_per_channel(self.img.img)
+
+        if self.ui_color.c_radio_all_bands.isChecked():
+            print("c all bands")
+            self.img_proc.set_contrast(self.ui.contrast_spinbox.value())
+            self.ui.contrast_spinbox.setValue(self.ui_color.c_double_spin_for_all.value())
+            img_rgb = self.img.img_RGB()
+            img_rgb = self.img_proc.compute_light_contrast(img_rgb)
+            self.img.set_img_tmp(self.img.img_RGB2BGR(img_rgb))
+            bytes_per_line = 3 * self.img.width
+            self.q_img = QImage(self.img.img_tmp_RGB(), self.img.width, self.img.height,
+                                bytes_per_line, QImage.Format_RGB888)
+        else:
+            print("c rgb")
+            self.img_proc.compute_light_contrast_per_channel(self.img.img)
