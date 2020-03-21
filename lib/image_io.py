@@ -1,6 +1,6 @@
 import os
 import cv2
-
+import numpy as np
 
 class Image:
     def __init__(self):
@@ -14,6 +14,7 @@ class Image:
         self.height = 0
         self.bands = 0
         self.img = None
+        self.img_tmp = None
         self.is_Open = False
 
     def print_img_info(self):
@@ -24,6 +25,9 @@ class Image:
         print("Width =", self.width)
         print("Height =", self.height)
         print("Color_Bands =", self.bands)
+
+    def set_img_tmp(self, img):
+        self.img_tmp = img
 
     def open_image_from(self, src, img_id=0, mem_alloc=True):
         if os.path.isfile(src):  # Check if file path exists
@@ -44,7 +48,7 @@ class Image:
                 self.bands = size[2]
             # Check allocation. For memory usage apps, mem_alloc needs to be False.
             if mem_alloc:
-                self.img = img_tmp
+                self.img = np.array(img_tmp)
             self.is_Open = mem_alloc
             return True
         return False
@@ -84,4 +88,12 @@ class Image:
 
     def img_RGB(self):
         img_tmp = cv2.cvtColor(self.img, cv2.COLOR_BGR2RGB)
+        return img_tmp
+
+    def img_tmp_RGB(self):
+        img_tmp = cv2.cvtColor(self.img_tmp, cv2.COLOR_BGR2RGB)
+        return img_tmp
+
+    def img_RGB2BGR(self, img_rgb):
+        img_tmp = cv2.cvtColor(img_rgb, cv2.COLOR_RGB2BGR)
         return img_tmp

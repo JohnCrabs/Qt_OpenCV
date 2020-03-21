@@ -1,5 +1,8 @@
 import sys
+
 from lib.image_io import *
+from lib.image_processing import *
+
 from helping_dialogs.color_processing import *
 
 from p02_Simple_Image_Processing.ui_main import *
@@ -46,6 +49,7 @@ class Window:
         self.img_view_timer = QTimer()
 
         self.img = Image()
+        self.img_proc = ImageProcessing()
         self.is_img_Open = False
         self.is_img_Save = False
 
@@ -76,8 +80,14 @@ class Window:
 
         self.ui.actionLight_Contrast.triggered.connect(self.open_color_light_dialog)
 
+        self.ui.light_spinbox.valueChanged.connect(self.light_spinbox_value_changed)
+        self.ui.contrast_spinbox.valueChanged.connect(self.contrast_spinbox_value_changed)
+
         self.img_view_timer.timeout.connect(self.update_img_view)
         self.img_view_timer.start(250)
+
+        self.ui_color.cancel_button.clicked.connect(self.dialog_color_cancel)
+
         # ------------------------
         # Actions list ends here
         # ---------------------------------------------------------------------------------------------------------- #
@@ -99,7 +109,9 @@ class Window:
 
         # Enable Spinbox
         self.ui.light_spinbox.setEnabled(self.UP)
+        self.ui.light_spinbox.setValue(0)
         self.ui.contrast_spinbox.setEnabled(self.UP)
+        self.ui.contrast_spinbox.setValue(1.0)
 
     def update_img_view(self):
         if self.is_img_Open:
@@ -159,7 +171,8 @@ class Window:
             self.img.print_img_info()  # Print info for debugging
             # Transform Image() to QImage()
             bytes_per_line = 3 * self.img.width
-            self.q_img = QImage(self.img.img_RGB(), self.img.width, self.img.height,
+            self.img.set_img_tmp(self.img.img)
+            self.q_img = QImage(self.img.img_tmp_RGB(), self.img.width, self.img.height,
                                 bytes_per_line, QImage.Format_RGB888)
             self.enable_options()  # Enable all image processing utilities
 
@@ -189,5 +202,26 @@ class Window:
         """
         self.MainWindow.close()  # Close The window
 
+    def light_spinbox_value_changed(self):
+        self.img_proc.set_light(self.ui.light_spinbox.value())
+        img_rgb = self.img.img_RGB()
+        img_rgb = self.img_proc.compute_light_contrast(img_rgb)
+        self.img.set_img_tmp(self.img.img_RGB2BGR(img_rgb))
+        bytes_per_line = 3 * self.img.width
+        self.q_img = QImage(self.img.img_tmp_RGB(), self.img.width, self.img.height,
+                            bytes_per_line, QImage.Format_RGB888)
+
+    def contrast_spinbox_value_changed(self):
+        self.img_proc.set_contrast(self.ui.contrast_spinbox.value())
+        img_rgb = self.img.img_RGB()
+        img_rgb = self.img_proc.compute_light_contrast(img_rgb)
+        self.img.set_img_tmp(self.img.img_RGB2BGR(img_rgb))
+        bytes_per_line = 3 * self.img.width
+        self.q_img = QImage(self.img.img_tmp_RGB(), self.img.width, self.img.height,
+                            bytes_per_line, QImage.Format_RGB888)
+
     def open_color_light_dialog(self):
         self.DialogColor.show()
+
+    def dialog_color_cancel(self):
+        self.DialogColor.close()
