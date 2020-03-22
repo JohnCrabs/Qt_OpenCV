@@ -26,6 +26,9 @@ class Image:
         print("Height =", self.height)
         print("Color_Bands =", self.bands)
 
+    def set_img_from_img_tmp(self):
+        self.img = self.img_tmp
+
     def set_img_tmp(self, img):
         self.img_tmp = img
 

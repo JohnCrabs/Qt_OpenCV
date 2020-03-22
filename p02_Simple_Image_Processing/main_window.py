@@ -86,6 +86,11 @@ class Window:
         self.img_view_timer.timeout.connect(self.update_img_view)
         self.img_view_timer.start(250)
 
+        self.ui_color.l_radio_all_bands.clicked.connect(self.dialog_color_light_all_checked)
+        self.ui_color.l_radio_rgb.clicked.connect(self.dialog_color_light_rgb_checked)
+        self.ui_color.c_radio_all_bands.clicked.connect(self.dialog_color_contrast_all_checked)
+        self.ui_color.c_radio_rgb.clicked.connect(self.dialog_color_contrast_rgb_checked)
+
         self.ui_color.cancel_button.clicked.connect(self.dialog_color_cancel)
         self.ui_color.compute_button.clicked.connect(self.dialog_color_compute)
 
@@ -184,7 +189,8 @@ class Window:
         """
         if not self.is_img_Save:
             self.save_as()  # Open dialog and take the path
-        else:  # Check if user gave a path or not (aka pressed "Open" or "Cancel"
+        else:  # Check if user gave a path or not (aka pressed "Open" or "Cancel")
+            self.img.set_img_from_img_tmp()
             self.img.save_image()
 
     def save_as(self):
@@ -194,6 +200,7 @@ class Window:
         """
         self.is_img_Save, f_path = self.save_img_path()  # Open dialog and take the path
         if self.is_img_Save:  # Check if user gave a path or not (aka pressed "Open" or "Cancel"
+            self.img.set_img_from_img_tmp()
             self.img.save_image_as(f_path)
 
     def exit_window(self):
@@ -205,6 +212,7 @@ class Window:
 
     def light_spinbox_value_changed(self):
         self.img_proc.set_light(self.ui.light_spinbox.value())
+        self.ui_color.l_spin_light_for_all.setValue(self.ui.light_spinbox.value())
         img_rgb = self.img.img_RGB()
         img_rgb = self.img_proc.compute_light_contrast(img_rgb)
         self.img.set_img_tmp(self.img.img_RGB2BGR(img_rgb))
@@ -214,6 +222,7 @@ class Window:
 
     def contrast_spinbox_value_changed(self):
         self.img_proc.set_contrast(self.ui.contrast_spinbox.value())
+        self.ui_color.c_contrast_for_all.setValue(self.ui.contrast_spinbox.value())
         img_rgb = self.img.img_RGB()
         img_rgb = self.img_proc.compute_light_contrast(img_rgb)
         self.img.set_img_tmp(self.img.img_RGB2BGR(img_rgb))
@@ -227,31 +236,58 @@ class Window:
     def dialog_color_cancel(self):
         self.DialogColor.close()
 
+    def dialog_color_light_all_checked(self):
+        self.ui_color.l_all_bands_widget.setEnabled(self.UP)
+        self.ui_color.l_rgb_widget.setEnabled(self.DOWN)
+
+    def dialog_color_light_rgb_checked(self):
+        self.ui_color.l_all_bands_widget.setEnabled(self.DOWN)
+        self.ui_color.l_rgb_widget.setEnabled(self.UP)
+        self.img_proc.set_default_light_contrast_rgb()
+
+    def dialog_color_contrast_all_checked(self):
+        self.ui_color.c_all_bands_widget.setEnabled(self.UP)
+        self.ui_color.c_rgb_widget.setEnabled(self.DOWN)
+
+    def dialog_color_contrast_rgb_checked(self):
+        self.ui_color.c_all_bands_widget.setEnabled(self.DOWN)
+        self.ui_color.c_rgb_widget.setEnabled(self.UP)
+
     def dialog_color_compute(self):
         if self.ui_color.l_radio_all_bands.isChecked():
-            print("l all bands")
             self.img_proc.set_light(self.ui_color.l_spin_light_for_all.value())
+            self.ui_color.l_spin_red.setValue(self.ui_color.l_spin_light_for_all.value())
+            self.ui_color.l_spin_green.setValue(self.ui_color.l_spin_light_for_all.value())
+            self.ui_color.l_spin_blue.setValue(self.ui_color.l_spin_light_for_all.value())
             self.ui.light_spinbox.setValue(self.ui_color.l_spin_light_for_all.value())
             img_rgb = self.img.img_RGB()
             img_rgb = self.img_proc.compute_light_contrast(img_rgb)
             self.img.set_img_tmp(self.img.img_RGB2BGR(img_rgb))
-            bytes_per_line = 3 * self.img.width
-            self.q_img = QImage(self.img.img_tmp_RGB(), self.img.width, self.img.height,
-                                bytes_per_line, QImage.Format_RGB888)
-        else:
-            print("l rgb")
-            self.img_proc.compute_light_contrast_per_channel(self.img.img)
 
         if self.ui_color.c_radio_all_bands.isChecked():
-            print("c all bands")
             self.img_proc.set_contrast(self.ui.contrast_spinbox.value())
-            self.ui.contrast_spinbox.setValue(self.ui_color.c_double_spin_for_all.value())
+            self.ui.contrast_spinbox.setValue(self.ui_color.c_contrast_for_all.value())
+            self.ui_color.c_double_spin_red.setValue(self.ui_color.c_contrast_for_all.value())
+            self.ui_color.c_double_spin_green.setValue(self.ui_color.c_contrast_for_all.value())
+            self.ui_color.c_double_spin_blue.setValue(self.ui_color.c_contrast_for_all.value())
             img_rgb = self.img.img_RGB()
             img_rgb = self.img_proc.compute_light_contrast(img_rgb)
+            self.img.set_img_tmp(self.img.img_RGB2BGR(img_rgb))
+
+        if self.ui_color.l_radio_rgb.isChecked() or self.ui_color.c_radio_rgb.isChecked():
+            self.img_proc.set_light_contrast_rgb(self.ui_color.l_spin_red.value(), self.ui_color.l_spin_green.value(),
+                                                 self.ui_color.l_spin_blue.value(),
+                                                 self.ui_color.c_double_spin_red.value(),
+                                                 self.ui_color.c_double_spin_green.value(),
+                                                 self.ui_color.c_double_spin_blue.value())
+            img_rgb = self.img.img_RGB()
+            img_rgb = self.img_proc.compute_light_contrast_per_channel(img_rgb)
             self.img.set_img_tmp(self.img.img_RGB2BGR(img_rgb))
             bytes_per_line = 3 * self.img.width
             self.q_img = QImage(self.img.img_tmp_RGB(), self.img.width, self.img.height,
                                 bytes_per_line, QImage.Format_RGB888)
-        else:
-            print("c rgb")
-            self.img_proc.compute_light_contrast_per_channel(self.img.img)
+            self.img_proc.compute_light_contrast_per_channel(self.img.img_tmp)
+
+        bytes_per_line = 3 * self.img.width
+        self.q_img = QImage(self.img.img_tmp_RGB(), self.img.width, self.img.height,
+                            bytes_per_line, QImage.Format_RGB888)

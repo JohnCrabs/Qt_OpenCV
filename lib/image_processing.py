@@ -33,12 +33,16 @@ class ImageProcessing:
 
     def compute_light_contrast(self, img):
         #img_tmp = cv2.convertScaleAbs(img, alpha=self.contrast, beta=self.light)
-        img_tmp = cv2.addWeighted( img, self.contrast, img, 0, self.light)
+        img_tmp = cv2.addWeighted(img, self.contrast, img, 0, self.light)
         #print(img_tmp)
         return img_tmp
 
     def compute_light_contrast_per_channel(self, img):
-        print(img[0])
-        print("")
-        print(img[0][0])
+        img_r, img_g, img_b = cv2.split(img)
+        img_r_tmp = cv2.addWeighted(img_r, self.contrast_rgb[0], img_r, 0, self.light_rgb[0])
+        img_g_tmp = cv2.addWeighted(img_g, self.contrast_rgb[1], img_g, 0, self.light_rgb[1])
+        img_b_tmp = cv2.addWeighted(img_b, self.contrast_rgb[2], img_b, 0, self.light_rgb[2])
+
+        img_tmp = cv2.merge((img_r_tmp, img_g_tmp, img_b_tmp))
+
         return img_tmp
